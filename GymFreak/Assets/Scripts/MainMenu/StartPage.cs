@@ -45,5 +45,10 @@ public class StartPage : MonoBehaviour
         }
 
         StartCoroutine("PadeIn");
+    } 
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("MainPage");
     }
 }
