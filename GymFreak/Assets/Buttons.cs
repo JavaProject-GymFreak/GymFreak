@@ -15,7 +15,7 @@ public class Buttons : MonoBehaviour
     public void ChangeSpeed()
     {
         gameData.speedLevel *= 2;
-        if(gameData.speedLevel > 8)
+        if(gameData.speedLevel > 4)
         {
             gameData.speedLevel = 1;
         }

@@ -5,6 +5,14 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 
+public enum ActivityType
+{
+    Exercise,
+    Rest,
+    Work,
+    Eat,
+}
+
 public class GameData : MonoBehaviour
 {
     [Header("플레이어 정보")]
@@ -31,6 +39,9 @@ public class GameData : MonoBehaviour
     public int speedLevel;
     public TextMeshProUGUI speedText;
 
+    [Header("활동")]
+    public ActivityType activityType;
+
     private void Start()
     {
         speedLevel = 1;
@@ -43,7 +54,7 @@ public class GameData : MonoBehaviour
     public void Update()
     {
         if(!pause)
-            currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel);
+            currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * 4);
         SetDate();
 
         speedText.text = "x" + speedLevel;
