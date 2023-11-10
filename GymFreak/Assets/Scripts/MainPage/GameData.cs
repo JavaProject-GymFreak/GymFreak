@@ -15,6 +15,8 @@ public enum ActivityType
 
 public class GameData : MonoBehaviour
 {
+    EasyFunc easyFunc;
+
     [Header("플레이어 정보")]
     public string playerName; // 이름
     public int goalBig3; // 목표 3대 운동
@@ -28,23 +30,34 @@ public class GameData : MonoBehaviour
 
     [Header("피로도")]
     public float fatigue; // 피로도
-    public Slider sliderFatigue;
-    public Image fillImageFatigue;
-    public TextMeshProUGUI fatigueText;
+
+    [SerializeField] private Slider sliderFatigue;
+    [SerializeField] private Image fillImageFatigue;
+    [SerializeField] private TextMeshProUGUI fatigueText;
+
+    [SerializeField] private Color safeFatigueColor;
+    [SerializeField] private Color dagerFatigueColor;
 
     [Header("시간")]
     public bool pause;
     public DateTime currentDate; // 날짜
 
-    public TextMeshProUGUI dateText;
-    public TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI dateText;
+    [SerializeField] private TextMeshProUGUI timeText;
 
     public int speedLevel;
-    public TextMeshProUGUI speedText;
+    [SerializeField] private TextMeshProUGUI speedText;
+
+    private int timeRatio; // 게임 속 속도가 현실보다 몇 배 빠르게 흘러가는지 ( 기본적으로 1초가 1분 )
 
     [Header("활동")]
     public ActivityType currentActivityType;
     public GameObject panelActivity;
+
+    private void Awake()
+    {
+        easyFunc = GetComponent<EasyFunc>();
+    }
 
     private void Start()
     {
@@ -62,12 +75,23 @@ public class GameData : MonoBehaviour
         if (pause)
             return;
 
-        currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * 4);
+        ChangeValues();
+    }
+    private void ChangeValues()
+    {
+        ChangeTime();
+        ChangeFatigue();
+    }
+
+    private void ChangeTime()
+    {
+        currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * timeRatio);
 
         SetDate();
         speedText.text = "x" + speedLevel;
-
-
+    }
+    private void ChangeFatigue()
+    {
         if (currentActivityType == ActivityType.Exercise)
         {
             fatigue += Time.deltaTime * 2.3f * speedLevel;
@@ -82,21 +106,23 @@ public class GameData : MonoBehaviour
         fatigueText.text = Mathf.FloorToInt(fatigue) + "/100";
         sliderFatigue.value = fatigue / 100;
 
-        Color color;
-        ColorUtility.TryParseHtmlString(fatigue >= 80 ? "#FF3741" : "#FCFF58", out color);
-        fillImageFatigue.color = color;
+        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // 피로도가 80 넘으면 빨간색 아니면 노란색
     }
+
     private void SetDate()
     {
-        dateText.text = currentDate.Year + "년" +
-                   currentDate.Month + "월" + currentDate.Day + "일";
-        timeText.text = currentDate.Hour + " : " + currentDate.Minute;
+        string curDateText = currentDate.Year + "년" +
+                             currentDate.Month + "월" + currentDate.Day + "일";
+        dateText.text = curDateText;
+
+        string curTimeText = currentDate.Hour + " : " + currentDate.Minute;
+        timeText.text = curTimeText;
     }
+
     public void LoadData()
     {
 
     }
-
     public void SaveData()
     {
 

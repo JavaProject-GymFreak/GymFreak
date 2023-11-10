@@ -20,6 +20,7 @@ public class Buttons : MonoBehaviour
             gameData.speedLevel = 1;
         }
     }
+
     public void Pause()
     {
         gameData.pause = true;
@@ -28,13 +29,14 @@ public class Buttons : MonoBehaviour
     {
         gameData.pause = false;
     }
+
     public void ChangeActivityToExercise()
     {
         if (gameData.currentActivityType == ActivityType.Exercise)
             return;
 
         gameData.currentActivityType = ActivityType.Exercise;
-        gameData.panelActivity.SetActive(false);
+        ClosePanelActivity();
     }
     public void ChangeActivityToRest()
     {
@@ -42,7 +44,7 @@ public class Buttons : MonoBehaviour
             return;
 
         gameData.currentActivityType = ActivityType.Rest;
-        gameData.panelActivity.SetActive(false);
+        ClosePanelActivity();
     }
     public void ChangeActivityToWork()
     {
@@ -50,6 +52,11 @@ public class Buttons : MonoBehaviour
             return;
 
         gameData.currentActivityType = ActivityType.Work;
+        ClosePanelActivity();
+    }
+
+    private void ClosePanelActivity()
+    {
         gameData.panelActivity.SetActive(false);
     }
 }

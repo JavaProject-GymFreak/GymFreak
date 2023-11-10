@@ -6102,6 +6102,7 @@ GameObject:
   - component: {fileID: 2100577917}
   - component: {fileID: 2100577916}
   - component: {fileID: 2100577918}
+  - component: {fileID: 2100577919}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6130,6 +6131,8 @@ MonoBehaviour:
   sliderFatigue: {fileID: 519302102}
   fillImageFatigue: {fileID: 846778374}
   fatigueText: {fileID: 1063588687}
+  safeFatigueColor: {r: 0.9882353, g: 1, b: 0.34509805, a: 0}
+  dagerFatigueColor: {r: 1, g: 0.21568628, b: 0.25490198, a: 0}
   pause: 0
   dateText: {fileID: 920181122}
   timeText: {fileID: 866768316}
@@ -6162,6 +6165,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa49013bbaa5e9c479177b039f634192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2100577919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100577915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e38b1bb8b5fc15c409917e0d36af9d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2122332876
