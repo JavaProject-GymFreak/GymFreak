@@ -27,7 +27,10 @@ public class GameData : MonoBehaviour
     public int money; // 돈
 
     [Header("피로도")]
-    public int fatigue; // 피로도
+    public float fatigue; // 피로도
+    public Slider sliderFatigue;
+    public Image fillImageFatigue;
+    public TextMeshProUGUI fatigueText;
 
     [Header("시간")]
     public bool pause;
@@ -40,7 +43,8 @@ public class GameData : MonoBehaviour
     public TextMeshProUGUI speedText;
 
     [Header("활동")]
-    public ActivityType activityType;
+    public ActivityType currentActivityType;
+    public GameObject panelActivity;
 
     private void Start()
     {
@@ -49,15 +53,38 @@ public class GameData : MonoBehaviour
 
         currentDate = new DateTime(2023, 1, 1);
         SetDate();
+
+        fatigue = 0;
     }
 
     public void Update()
     {
-        if(!pause)
-            currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * 4);
-        SetDate();
+        if (pause)
+            return;
 
+        currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * 4);
+
+        SetDate();
         speedText.text = "x" + speedLevel;
+
+
+        if (currentActivityType == ActivityType.Exercise)
+        {
+            fatigue += Time.deltaTime * 2.3f * speedLevel;
+        }
+        else if (currentActivityType == ActivityType.Rest)
+        {
+            fatigue += Time.deltaTime * 2.3f * speedLevel * -1;
+        }
+
+        fatigue = Mathf.Clamp(fatigue, 0f, 100f);
+
+        fatigueText.text = Mathf.FloorToInt(fatigue) + "/100";
+        sliderFatigue.value = fatigue / 100;
+
+        Color color;
+        ColorUtility.TryParseHtmlString(fatigue >= 80 ? "#FF3741" : "#FCFF58", out color);
+        fillImageFatigue.color = color;
     }
     private void SetDate()
     {
