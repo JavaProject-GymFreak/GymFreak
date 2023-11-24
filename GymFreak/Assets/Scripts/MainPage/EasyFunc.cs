@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EasyFunc : MonoBehaviour
 {
-    public Color HexToColor(string hex)
+    public static Color HexToColor(string hex)
     {
         Color color = Color.white;
         ColorUtility.TryParseHtmlString(hex, out color);

@@ -5,28 +5,22 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 
-public enum ActivityType
-{
-    Exercise,
-    Rest,
-    Work,
-    Eat,
-}
 
 public class GameData : MonoBehaviour
 {
-    EasyFunc easyFunc;
+    #region Values
 
     [Header("플레이어 정보")]
-    public string playerName; // 이름
-    public int goalBig3; // 목표 3대 운동
+    public Character character;
 
     [Header("신체 정보")]
     public float currentMuscleMass; // 현재 골격근량
     public float currentFatMass; // 현재 체지방량
+    public float happiness; // 현재 행복도
 
     [Header("돈")]
     public int money; // 돈
+    [SerializeField] private TextMeshProUGUI moneyText;
 
     [Header("피로도")]
     public float fatigue; // 피로도
@@ -48,15 +42,17 @@ public class GameData : MonoBehaviour
     public int speedLevel;
     [SerializeField] private TextMeshProUGUI speedText;
 
-    private int timeRatio; // 게임 속 속도가 현실보다 몇 배 빠르게 흘러가는지 ( 기본적으로 1초가 1분 )
+    [SerializeField] private int timeRatio; // 게임 속 속도가 현실보다 몇 배 빠르게 흘러가는지 ( 기본적으로 1초가 1분 )
 
     [Header("활동")]
     public ActivityType currentActivityType;
     public GameObject panelActivity;
 
+    #endregion
+
     private void Awake()
-    {
-        easyFunc = GetComponent<EasyFunc>();
+    {   
+
     }
 
     private void Start()
@@ -64,7 +60,7 @@ public class GameData : MonoBehaviour
         speedLevel = 1;
         pause = false;
 
-        currentDate = new DateTime(2023, 1, 1);
+        currentDate = new DateTime(2023, 1, 1, 12, 0, 0);
         SetDate();
 
         fatigue = 0;
@@ -72,15 +68,22 @@ public class GameData : MonoBehaviour
 
     public void Update()
     {
-        if (pause)
-            return;
-
         ChangeValues();
     }
     private void ChangeValues()
     {
+        ChangeSpeed();
+
+        if (pause)
+            return;
+
         ChangeTime();
         ChangeFatigue();
+        ChangeMoney();
+    }
+    private void ChangeSpeed()
+    {
+        speedText.text = "x" + speedLevel;
     }
 
     private void ChangeTime()
@@ -88,7 +91,6 @@ public class GameData : MonoBehaviour
         currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * timeRatio);
 
         SetDate();
-        speedText.text = "x" + speedLevel;
     }
     private void ChangeFatigue()
     {
@@ -107,6 +109,10 @@ public class GameData : MonoBehaviour
         sliderFatigue.value = fatigue / 100;
 
         fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // 피로도가 80 넘으면 빨간색 아니면 노란색
+    }
+    private void ChangeMoney()
+    {
+        moneyText.text = money.ToString("N0");
     }
 
     private void SetDate()
@@ -127,4 +133,23 @@ public class GameData : MonoBehaviour
     {
 
     }
+}
+
+
+public enum ActivityType
+{
+    Exercise,
+    Rest,
+    Work,
+    Eat,
+    Sleep,
+}
+
+public enum Character
+{
+    potato,
+    ma,
+    sim,
+    jinam,
+    hee,
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab8ed6449b043438baaa202da80752, type: 3}
+  m_Name: Cake
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: "\uCF00\uC774\uD06C"
+  <Description>k__BackingField: "\uB2EC\uB2EC\uD568\uC758 \uB05D\uD310\uC655"
+  <ItemImage>k__BackingField: {fileID: 21300000, guid: 4908129fe34e27a4fb582ebab3056f49, type: 3}
+  <Price>k__BackingField: 24000
+  <HappinessIncrease>k__BackingField: 0
+  <MuscleIncrease>k__BackingField: 0
+  <FatIncrease>k__BackingField: 0

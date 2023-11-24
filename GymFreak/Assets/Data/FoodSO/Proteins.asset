@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab8ed6449b043438baaa202da80752, type: 3}
+  m_Name: Proteins
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: "\uB2E8\uBC31\uC9C8 \uC885\uD569\uC138\uD2B8"
+  <Description>k__BackingField: "\uD3EC\uAE30\uB9CC\uD574\uB3C4 \uD37D\uD37D"
+  <ItemImage>k__BackingField: {fileID: 21300000, guid: ee4ea666355d21848a0373c162d12574, type: 3}
+  <Price>k__BackingField: 9000
+  <HappinessIncrease>k__BackingField: 0
+  <MuscleIncrease>k__BackingField: 0
+  <FatIncrease>k__BackingField: 0
