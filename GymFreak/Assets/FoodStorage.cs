@@ -31,6 +31,11 @@ public class FoodStorage : MonoBehaviour
         return inventoryData.GetCurrentInventoryState().Count;
     }
 
+    public int GetFoodQuantityByFoodSO(FoodSO foodSO)
+    {
+        return inventoryData.GetQuantityByFoodSO(foodSO);
+    }
+
     public int AvailableFoodQuantity(FoodSO foodSO)
     {
         int maxAvailableQuantity = 

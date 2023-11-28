@@ -25,6 +25,17 @@ public class InventorySO : ScriptableObject
             }
         }
     }
+    public int GetQuantityByFoodSO(FoodSO foodSO)
+    {
+        for (int i = 0; i < inventoryItems.Count; i++)
+        {
+            if (inventoryItems[i].item.ID == foodSO.ID)
+            {
+                return inventoryItems[i].quantity;
+            }
+        }
+        return -1;
+    }
 
     public int GetPriceByFoodSO(FoodSO foodSO)
     {

@@ -9,6 +9,9 @@ public class PurchaseWindow : MonoBehaviour
     #region 변수
 
     [SerializeField]
+    private GameData gameData;
+
+    [SerializeField]
     private FoodStorage foodStorage;
 
     [SerializeField]
@@ -18,7 +21,7 @@ public class PurchaseWindow : MonoBehaviour
     private Slider slider_amount;
 
     [SerializeField]
-    private TMP_Text text_amount;
+    private TMP_Text text_amount, text_moneyChange, text_quantity;
 
     [SerializeField]
     private Image image_food;
@@ -31,10 +34,8 @@ public class PurchaseWindow : MonoBehaviour
     //돈 부족할 때 안 열리게(버튼 비활성화)
     //가능하면 에러 메시지?
 
-
     private void OnEnable()
     {
-        text_amount.text = (int)slider_amount.value + "";
         slider_amount.onValueChanged.AddListener(UpdateText);
     }
 
@@ -43,9 +44,13 @@ public class PurchaseWindow : MonoBehaviour
         foodShopWindow.OpenFoodShopWindow(); // 하극사아아앙~~
     }
 
-    void UpdateText(float val)
+    void UpdateText(float value)
     {
-        text_amount.text = (int)val + "";
+        int intValue = (int)value;
+
+        text_amount.text = intValue + "";
+        text_moneyChange.text = gameData.money + " -> " + (gameData.money - (foodSO.Price * intValue));
+        text_quantity.text = foodStorage.GetFoodQuantityByFoodSO(foodSO) + " -> " + (foodStorage.GetFoodQuantityByFoodSO(foodSO) + intValue);
     }
 
     public void OpenWindow(FoodSO foodSO)
@@ -56,6 +61,11 @@ public class PurchaseWindow : MonoBehaviour
 
         slider_amount.maxValue = foodStorage.AvailableFoodQuantity(foodSO);
         slider_amount.value = 0;
+
+        text_amount.text = (int)slider_amount.value + "";
+        text_moneyChange.text = gameData.money + " -> " + (gameData.money - (foodSO.Price * (int)slider_amount.value));
+        text_quantity.text = foodStorage.GetFoodQuantityByFoodSO(foodSO) + " -> " + (foodStorage.GetFoodQuantityByFoodSO(foodSO) + (int)slider_amount.value);
+        text_amount.text = (int)slider_amount.value + "";
     }
 
     public void PurchaseFood()
