@@ -17,6 +17,6 @@ MonoBehaviour:
     \uD584\uBC84\uAC70"
   <ItemImage>k__BackingField: {fileID: 21300000, guid: 9a82ad207c70a8f429a50813750c267a, type: 3}
   <Price>k__BackingField: 10000
-  <HappinessIncrease>k__BackingField: 0
-  <MuscleIncrease>k__BackingField: 0
-  <FatIncrease>k__BackingField: 0
+  <HappinessIncrease>k__BackingField: 30
+  <MuscleIncrease>k__BackingField: 0.03
+  <FatIncrease>k__BackingField: 0.05

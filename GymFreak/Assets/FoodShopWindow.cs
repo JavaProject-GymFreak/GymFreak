@@ -50,7 +50,9 @@ public class FoodShopWindow : MonoBehaviour
             g.GetChild(2).GetComponent<TMP_Text>().text = food.item.Name;
             g.GetChild(3).GetComponent<TMP_Text>().text = food.item.Description;
             g.GetChild(4).GetComponent<TMP_Text>().text = "보유수량 : " + food.quantity;
-            g.GetChild(5).GetComponent<Button>().onClick.AddListener(() => purchaseWindow.OpenWindow(food.item));
+            Button b = g.GetChild(5).GetComponent<Button>();
+            b.onClick.AddListener(() => purchaseWindow.OpenWindow(food.item));
+            b.interactable = foodStorage.CanBuy(food.item);
         }
     }
 }

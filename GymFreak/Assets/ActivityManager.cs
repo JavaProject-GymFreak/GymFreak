@@ -71,11 +71,11 @@ public class ActivityManager : MonoBehaviour
                 curCharacter.SetActive(false);
                 break;
 
-            case ActivityType.Eat:
+            case ActivityType.Sleep:
                 curCharacter.SetActive(false);
-                ActiveBackgroundByNum(2);
+                ActiveBackgroundByNum(3);
 
-                foodStorage.ShowFoods();
+                gameData.pause = false;
                 break;
 
             default:

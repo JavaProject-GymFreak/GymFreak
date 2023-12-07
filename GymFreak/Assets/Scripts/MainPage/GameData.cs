@@ -4,26 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
-
+using System.Data;
+using UnityEngine.Networking;
 
 public class GameData : MonoBehaviour
 {
     #region Values
 
-    [Header("ÇÃ·¹ÀÌ¾î Á¤º¸")]
+    FoodStorage foodStorage;
+
+    [Header("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     public Character character;
 
-    [Header("½ÅÃ¼ Á¤º¸")]
-    public float currentMuscleMass; // ÇöÀç °ñ°Ý±Ù·®
-    public float currentFatMass; // ÇöÀç Ã¼Áö¹æ·®
-    public float happiness; // ÇöÀç Çàº¹µµ
+    [Header("ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½")]
+    public float currentMuscleMass; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ý±Ù·ï¿½
+    public float currentFatMass; // ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½æ·®
+    public float happiness; // ï¿½ï¿½ï¿½ï¿½ ï¿½àº¹ï¿½ï¿½
 
-    [Header("µ·")]
-    public int money; // µ·
+    [Header("ï¿½ï¿½")]
+    public int money; // ï¿½ï¿½
     [SerializeField] private TextMeshProUGUI moneyText;
 
-    [Header("ÇÇ·Îµµ")]
-    public float fatigue; // ÇÇ·Îµµ
+    [Header("ï¿½Ç·Îµï¿½")]
+    public float fatigue; // ï¿½Ç·Îµï¿½
 
     [SerializeField] private Slider sliderFatigue;
     [SerializeField] private Image fillImageFatigue;
@@ -32,9 +35,9 @@ public class GameData : MonoBehaviour
     [SerializeField] private Color safeFatigueColor;
     [SerializeField] private Color dagerFatigueColor;
 
-    [Header("½Ã°£")]
+    [Header("ï¿½Ã°ï¿½")]
     public bool pause;
-    public DateTime currentDate; // ³¯Â¥
+    public DateTime currentDate; // ï¿½ï¿½Â¥
 
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI timeText;
@@ -42,17 +45,24 @@ public class GameData : MonoBehaviour
     public int speedLevel;
     [SerializeField] private TextMeshProUGUI speedText;
 
-    [SerializeField] private int timeRatio; // °ÔÀÓ ¼Ó ¼Óµµ°¡ Çö½Çº¸´Ù ¸î ¹è ºü¸£°Ô Èê·¯°¡´ÂÁö ( ±âº»ÀûÀ¸·Î 1ÃÊ°¡ 1ºÐ )
+    [SerializeField] private int timeRatio; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Çºï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ê·¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ( ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½Ê°ï¿½ 1ï¿½ï¿½ )
 
-    [Header("È°µ¿")]
+    [Header("È°ï¿½ï¿½")]
     public ActivityType currentActivityType;
     public GameObject panelActivity;
+
+    [Header("ï¿½ï¿½ï¿½")]
+    public float totalHappy;
+    public float totalMuscle;
+    public float totalFat;
+
+    public float excerciseTime;
 
     #endregion
 
     private void Awake()
-    {   
-
+    {
+        foodStorage = GetComponent<FoodStorage>();
     }
 
     private void Start()
@@ -73,13 +83,13 @@ public class GameData : MonoBehaviour
     private void ChangeValues()
     {
         ChangeSpeed();
+        ChangeMoney();
 
         if (pause)
             return;
 
         ChangeTime();
         ChangeFatigue();
-        ChangeMoney();
     }
     private void ChangeSpeed()
     {
@@ -88,7 +98,17 @@ public class GameData : MonoBehaviour
 
     private void ChangeTime()
     {
-        currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * timeRatio);
+        if(currentActivityType == ActivityType.Sleep)
+        {
+            currentDate = currentDate.AddMinutes(Time.deltaTime * timeRatio * 10);
+        }
+        else
+        {
+            currentDate = currentDate.AddMinutes(Time.deltaTime * speedLevel * timeRatio);
+
+            if(currentActivityType == ActivityType.Exercise)
+                excerciseTime += Time.deltaTime * speedLevel * timeRatio;
+        }
 
         SetDate();
     }
@@ -108,7 +128,7 @@ public class GameData : MonoBehaviour
         fatigueText.text = Mathf.FloorToInt(fatigue) + "/100";
         sliderFatigue.value = fatigue / 100;
 
-        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // ÇÇ·Îµµ°¡ 80 ³ÑÀ¸¸é »¡°£»ö ¾Æ´Ï¸é ³ë¶õ»ö
+        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // ï¿½Ç·Îµï¿½ï¿½ï¿½ 80 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
     }
     private void ChangeMoney()
     {
@@ -117,8 +137,8 @@ public class GameData : MonoBehaviour
 
     private void SetDate()
     {
-        string curDateText = currentDate.Year + "³â" +
-                             currentDate.Month + "¿ù" + currentDate.Day + "ÀÏ";
+        string curDateText = currentDate.Year + "ï¿½ï¿½" +
+                             currentDate.Month + "ï¿½ï¿½" + currentDate.Day + "ï¿½ï¿½";
         dateText.text = curDateText;
 
         string curTimeText = currentDate.Hour + " : " + currentDate.Minute;
@@ -131,10 +151,60 @@ public class GameData : MonoBehaviour
     }
     public void SaveData()
     {
+        SendData sendData = new SendData();
+        sendData.character = character;
+        sendData.currentMuscleMass = currentMuscleMass;
+        sendData.currentFatMass = currentFatMass;
+        sendData.happiness = happiness;
+        sendData.money = money;
+        sendData.currentDate = currentDate;
+        sendData.itemList = foodStorage.GetInventoryItemState();
 
+
+        string json = JsonUtility.ToJson(sendData);
+        Debug.Log(json);
+        //StartCoroutine(Upload("http://URL", json));
+    }
+
+    IEnumerator Upload(string URL, string json)
+    {
+        using (UnityWebRequest request = UnityWebRequest.PostWwwForm(URL, json))
+        {
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+            }
+
+        }
     }
 }
 
+public class SendData
+{
+    public Character character;
+
+    public float currentMuscleMass; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ý±Ù·ï¿½
+    public float currentFatMass; // ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½æ·®
+    public float happiness; // ï¿½ï¿½ï¿½ï¿½ ï¿½àº¹ï¿½ï¿½
+
+    public int money; // ï¿½ï¿½
+
+
+    public DateTime currentDate; // ï¿½ï¿½Â¥
+
+    public List<InventoryItem> itemList;
+}
 
 public enum ActivityType
 {

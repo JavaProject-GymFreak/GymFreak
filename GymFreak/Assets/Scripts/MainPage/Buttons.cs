@@ -74,13 +74,7 @@ public class Buttons : MonoBehaviour
     }
     public void ChangeActivityToEat()
     {
-        if (gameData.currentActivityType == ActivityType.Eat)
-            return;
-
-        if (activityManager.ChangeActivity(ActivityType.Eat))
-        {
-            ClosePanelActivity();
-        }
+        GetComponent<FoodStorage>().ShowFoods();
     }
 
     private void ClosePanelActivity()

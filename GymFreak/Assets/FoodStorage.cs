@@ -43,6 +43,11 @@ public class FoodStorage : MonoBehaviour
         return maxAvailableQuantity;
     }
 
+    public bool CanBuy(FoodSO foodSO)
+    {
+        return gameData.money >= foodSO.Price && inventoryData.CanBuy(foodSO, 1);
+    }
+
     public bool BuyFood(FoodSO foodSO, int amount)
     {
         if(gameData.money >= foodSO.Price * amount && inventoryData.CanBuy(foodSO, amount))

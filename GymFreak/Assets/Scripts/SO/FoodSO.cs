@@ -25,7 +25,7 @@ public class FoodSO : ScriptableObject
     public float HappinessIncrease { get; set; } // 최대 100 한번 먹을때마다 맛없는거 대충 -10 맛있는거 40
 
     [field: SerializeField]
-    public float MuscleIncrease { get; set; } // 한달에 3
+    public float MuscleIncrease { get; set; } // 한달에 3 하루에 0.03
 
     [field: SerializeField]
     public float FatIncrease { get; set; } // 맛있는거 0.1  맛없는거 -0.05
