@@ -16,12 +16,12 @@ public class Buttons : MonoBehaviour
 
     public void ChangeSpeed()
     {
-        gameData.speedLevel *= 2;
+        gameData.speedLevel += 0.5f;
         activityManager.SetAnimSpeed(gameData.speedLevel);
 
-        if(gameData.speedLevel > 4)
+        if(gameData.speedLevel > 3)
         {
-            gameData.speedLevel = 1;
+            gameData.speedLevel = 0.5f;
             activityManager.SetAnimSpeed(gameData.speedLevel);
         }
     }

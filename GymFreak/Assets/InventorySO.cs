@@ -14,6 +14,17 @@ public class InventorySO : ScriptableObject
     {
         return inventoryItems;
     }
+
+    public void EatFoodByFoodSO(FoodSO foodSO)
+    {
+        for (int i = 0; i < inventoryItems.Count; i++)
+        {
+            if (inventoryItems[i].item.ID == foodSO.ID)
+            {
+                inventoryItems[i].ChangeQuantity(inventoryItems[i].quantity-1);
+            }
+        }
+    }
     
     public void BuyFoodByFoodSO(FoodSO foodSO, int amount)
     {
@@ -69,7 +80,6 @@ public class InventoryItem
     public int quantity;
     public FoodSO item;
 
-    public bool IsEmpty => quantity == 0;
 
     public void ChangeQuantity(int nquantity)
     {

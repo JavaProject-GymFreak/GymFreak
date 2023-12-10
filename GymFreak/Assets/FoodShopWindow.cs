@@ -42,8 +42,10 @@ public class FoodShopWindow : MonoBehaviour
         current_money.text = "µ· : " + gameData.money;
 
         Transform g;
+        Debug.Log(foodStorage.GetInventoryItemState().Count);
         foreach (var food in foodStorage.GetInventoryItemState())
         {
+            Debug.Log(food);
             g = Instantiate(foodTemplate, scrollView_content.transform).transform;
             g.GetChild(0).GetComponent<Image>().sprite = food.item.ItemImage;
             g.GetChild(1).GetComponent<TMP_Text>().text = "°¡°Ý : " + food.item.Price;

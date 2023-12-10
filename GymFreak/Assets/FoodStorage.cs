@@ -20,6 +20,10 @@ public class FoodStorage : MonoBehaviour
     {
         gameData = GetComponent<GameData>();
     }
+    public void EatFoodByFoodSO(FoodSO foodSO)
+    {
+        inventoryData.EatFoodByFoodSO(foodSO);
+    }
 
     public List<InventoryItem> GetInventoryItemState()
     {
@@ -27,12 +31,14 @@ public class FoodStorage : MonoBehaviour
     }
     public List<InventoryItem> GetInventoryItemStateOnlyAvailable()
     {
-        List<InventoryItem> inventoryItems = inventoryData.GetCurrentInventoryState();
-        for(int i =0; i < inventoryItems.Count; i++)
+        List<InventoryItem> inventoryItems = new List<InventoryItem>();
+        
+        for(int i =0; i < inventoryData.GetCurrentInventoryState().Count; i++)
         {
-            if (inventoryItems[i].quantity == 0)
+            
+            if (inventoryData.GetCurrentInventoryState()[i].quantity != 0)
             {
-                inventoryItems.RemoveAt(i);
+                inventoryItems.Add(inventoryData.GetCurrentInventoryState()[i]);
             }
         }
         return inventoryItems;

@@ -12,6 +12,7 @@ public class GameData : MonoBehaviour
     #region Values
 
     FoodStorage foodStorage;
+    ActivityManager activityManager;
 
     [Header("플레이어 정보")]
     public Character character;
@@ -30,7 +31,8 @@ public class GameData : MonoBehaviour
     [SerializeField] private TextMeshProUGUI moneyText;
 
     [Header("피로도")]
-    public float fatigue; // 피로도
+    public float fatigue_cur;
+    public float fatigue_max;
 
     [SerializeField] private Slider sliderFatigue;
     [SerializeField] private Image fillImageFatigue;
@@ -46,7 +48,7 @@ public class GameData : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI timeText;
 
-    public int speedLevel;
+    public float speedLevel;
     [SerializeField] private TextMeshProUGUI speedText;
 
     [SerializeField] private int timeRatio; // 게임 속 속도가 현실보다 몇 배 빠르게 흘러가는지 ( 기본적으로 1초가 1분 )
@@ -54,6 +56,9 @@ public class GameData : MonoBehaviour
     [Header("활동")]
     public ActivityType currentActivityType;
     public GameObject panelActivity;
+
+    public DateTime lastEatTime;
+    [SerializeField] private Button eatButton;
 
     [Header("기록")]
     public float totalHappy;
@@ -66,6 +71,7 @@ public class GameData : MonoBehaviour
 
     private void Awake()
     {
+        activityManager = GetComponent<ActivityManager>();
         foodStorage = GetComponent<FoodStorage>();
     }
 
@@ -74,10 +80,11 @@ public class GameData : MonoBehaviour
         speedLevel = 1;
         pause = false;
 
-        currentDate = new DateTime(2023, 1, 1, 12, 0, 0);
+        currentDate = new DateTime(2023, 1, 1, 0, 0, 0);
+        lastEatTime = new DateTime(2022, 1, 1, 0, 0, 0);
         SetDate();
 
-        fatigue = 0;
+        fatigue_cur = 0;
     }
 
     public void Update()
@@ -95,6 +102,12 @@ public class GameData : MonoBehaviour
         ChangeStats();
         ChangeTime();
         ChangeFatigue();
+        ChangeFoodTime();
+    }
+    private void ChangeFoodTime()
+    {
+        TimeSpan t = currentDate - lastEatTime;
+        eatButton.interactable = t.TotalHours > 3;
     }
     private void ChangeSpeed()
     {
@@ -108,9 +121,10 @@ public class GameData : MonoBehaviour
     }
     private void ChangeTime()
     {
-        if(currentActivityType == ActivityType.Sleep)
+        
+        if (currentActivityType == ActivityType.Sleep || currentActivityType == ActivityType.Faint)
         {
-            currentDate = currentDate.AddMinutes(Time.deltaTime * timeRatio * 10);
+            currentDate = currentDate.AddMinutes(Time.deltaTime * timeRatio * 15);
         }
         else
         {
@@ -122,26 +136,57 @@ public class GameData : MonoBehaviour
 
         SetDate();
     }
+    float timer, timerr;
     private void ChangeFatigue()
     {
+        
         if (currentActivityType == ActivityType.Exercise)
         {
-            fatigue += Time.deltaTime * 2.3f * speedLevel;
+            timer += Time.deltaTime;
+            if (timer >= 4 - speedLevel)// 3 -> 1 , 2 ->2 , 1 -> 3
+            {
+                timer = 0f;
+                fatigue_cur += UnityEngine.Random.Range(3f ,5f);
+                if(fatigue_cur >= fatigue_max)
+                {
+                    activityManager.ChangeActivity(ActivityType.Faint);
+                }
+            }
         }
-        else if (currentActivityType == ActivityType.Rest || currentActivityType == ActivityType.Sleep)
+        else if (currentActivityType == ActivityType.Rest)
         {
-            fatigue += Time.deltaTime * 2.3f * speedLevel * -1;
+            timer += Time.deltaTime;
+            if (timer >= 4 - speedLevel)// 3 -> 1 , 2 ->2 , 1 -> 3
+            {
+                timer = 0f;
+                fatigue_cur -= UnityEngine.Random.Range(3f, 5f);
+            }
+        }
+        else if (currentActivityType == ActivityType.Faint || currentActivityType == ActivityType.Sleep)
+        {
+            fatigue_cur -= Time.deltaTime * 3;
         }
 
-        fatigue = Mathf.Clamp(fatigue, 0f, 100f);
+        fatigue_cur = Mathf.Max(fatigue_cur, 0f);
 
-        fatigueText.text = Mathf.FloorToInt(fatigue) + "/100";
-        sliderFatigue.value = fatigue / 100;
+        fatigueText.text = Mathf.FloorToInt(fatigue_cur) + "/" + Mathf.FloorToInt(fatigue_max);
+        sliderFatigue.value = Mathf.Lerp(sliderFatigue.value, fatigue_cur / fatigue_max, 0.2f);
 
-        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // 피로도가 80 넘으면 빨간색 아니면 노란색
+        fillImageFatigue.color = fatigue_cur / fatigue_max >= 0.8f ? dagerFatigueColor : safeFatigueColor; // 피로도가 80 넘으면 빨간색 아니면 노란색
     }
     private void ChangeMoney()
     {
+        if (currentActivityType == ActivityType.Work)
+        {
+            timerr += Time.deltaTime * speedLevel;
+            
+            if(timerr >= 12)
+            {
+                timerr = 0;
+
+                money += 10000;
+            }
+        }
         moneyText.text = money.ToString("N0");
     }
 
@@ -170,7 +215,7 @@ public class GameData : MonoBehaviour
         sendData.currentFatMass = currentFatMass;
         sendData.happiness = happiness;
         sendData.money = money;
-        sendData.fatigue = fatigue;
+        sendData.fatigue_cur = fatigue_cur;
         sendData.currentDate = currentDate;
         sendData.itemList = foodStorage.GetInventoryItemState();
 
@@ -214,7 +259,7 @@ public class SendData
 
     public int money; // 돈
 
-    public float fatigue; // 피로도
+    public float fatigue_cur; // 피로도
 
     public DateTime currentDate; // 날짜
 
@@ -228,6 +273,7 @@ public enum ActivityType
     Work,
     Eat,
     Sleep,
+    Faint,
 }
 
 public enum Character

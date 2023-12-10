@@ -6,6 +6,8 @@ using TMPro;
 
 public class UIInventoryPage : MonoBehaviour
 {
+    [SerializeField] FoodStorage foodStorage;
+
     [SerializeField]
     private GameData gameData;
 
@@ -50,6 +52,10 @@ public class UIInventoryPage : MonoBehaviour
         gameData.totalHappy += selected_food.HappinessIncrease;
         gameData.totalMuscle += selected_food.MuscleIncrease;
         gameData.totalFat += selected_food.FatIncrease;
+
+        foodStorage.EatFoodByFoodSO(selected_food);
+
+        gameData.lastEatTime = gameData.currentDate;
     }
 }
 
