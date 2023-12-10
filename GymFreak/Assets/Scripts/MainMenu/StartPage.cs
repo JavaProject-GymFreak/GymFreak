@@ -49,6 +49,6 @@ public class StartPage : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("MainPage");
+        SceneManager.LoadScene(1);
     }
 }

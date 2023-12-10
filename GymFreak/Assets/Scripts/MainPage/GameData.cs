@@ -198,7 +198,7 @@ public class GameData : MonoBehaviour
         string curTimeText = currentDate.Hour + " : " + currentDate.Minute;
         timeText.text = curTimeText;
 
-        DateTime specificDate = new DateTime(2023, 1, 1, 12, 0, 0);
+        DateTime specificDate = new DateTime(2023, 1, 1, 0, 0, 0);
         TimeSpan diff = currentDate - specificDate;
         dday_text.text = "D - " + (diff.Days +1);
     }
