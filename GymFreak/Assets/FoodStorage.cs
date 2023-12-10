@@ -25,6 +25,18 @@ public class FoodStorage : MonoBehaviour
     {
         return inventoryData.GetCurrentInventoryState();
     }
+    public List<InventoryItem> GetInventoryItemStateOnlyAvailable()
+    {
+        List<InventoryItem> inventoryItems = inventoryData.GetCurrentInventoryState();
+        for(int i =0; i < inventoryItems.Count; i++)
+        {
+            if (inventoryItems[i].quantity == 0)
+            {
+                inventoryItems.RemoveAt(i);
+            }
+        }
+        return inventoryItems;
+    }
 
     public int GetItemCount()
     {
@@ -62,7 +74,7 @@ public class FoodStorage : MonoBehaviour
     public void ShowFoods()
     {
         currentFoodIndex = 0;
-        inventoryUI.SetUI(inventoryData.GetCurrentInventoryState(), 0);
+        inventoryUI.SetUI(GetInventoryItemStateOnlyAvailable(), 0);
     }
 
     public void NextFood()
@@ -70,7 +82,7 @@ public class FoodStorage : MonoBehaviour
         if (currentFoodIndex >= inventoryData.GetCurrentInventoryState().Count-1)
             return;
 
-        inventoryUI.SetUI(inventoryData.GetCurrentInventoryState(), ++currentFoodIndex);
+        inventoryUI.SetUI(GetInventoryItemStateOnlyAvailable(), ++currentFoodIndex);
     }
 
     public void PrevFood()
@@ -78,6 +90,6 @@ public class FoodStorage : MonoBehaviour
         if (currentFoodIndex == 0)
             return;
 
-        inventoryUI.SetUI(inventoryData.GetCurrentInventoryState(), --currentFoodIndex);
+        inventoryUI.SetUI(GetInventoryItemStateOnlyAvailable(), --currentFoodIndex);
     }
 }

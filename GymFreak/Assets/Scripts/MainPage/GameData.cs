@@ -13,20 +13,24 @@ public class GameData : MonoBehaviour
 
     FoodStorage foodStorage;
 
-    [Header("�÷��̾� ����")]
+    [Header("플레이어 정보")]
     public Character character;
+    [SerializeField] private TextMeshProUGUI dday_text;
 
-    [Header("��ü ����")]
-    public float currentMuscleMass; // ���� ��ݱٷ�
-    public float currentFatMass; // ���� ü���淮
-    public float happiness; // ���� �ູ��
+    [Header("신체 정보")]
+    public float currentMuscleMass; // 현재 골격근량
+    public float currentFatMass; // 현재 체지방량
+    public float happiness; // 현재 행복도
+    [SerializeField] private TextMeshProUGUI currentMuscleMassText;
+    [SerializeField] private TextMeshProUGUI currentFatMassText;
+    [SerializeField] private TextMeshProUGUI happinessText;
 
-    [Header("��")]
-    public int money; // ��
+    [Header("돈")]
+    public int money; // 돈
     [SerializeField] private TextMeshProUGUI moneyText;
 
-    [Header("�Ƿε�")]
-    public float fatigue; // �Ƿε�
+    [Header("피로도")]
+    public float fatigue; // 피로도
 
     [SerializeField] private Slider sliderFatigue;
     [SerializeField] private Image fillImageFatigue;
@@ -35,9 +39,9 @@ public class GameData : MonoBehaviour
     [SerializeField] private Color safeFatigueColor;
     [SerializeField] private Color dagerFatigueColor;
 
-    [Header("�ð�")]
+    [Header("시간")]
     public bool pause;
-    public DateTime currentDate; // ��¥
+    public DateTime currentDate; // 날짜
 
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI timeText;
@@ -45,13 +49,13 @@ public class GameData : MonoBehaviour
     public int speedLevel;
     [SerializeField] private TextMeshProUGUI speedText;
 
-    [SerializeField] private int timeRatio; // ���� �� �ӵ��� ���Ǻ��� �� �� ������ �귯������ ( �⺻������ 1�ʰ� 1�� )
+    [SerializeField] private int timeRatio; // 게임 속 속도가 현실보다 몇 배 빠르게 흘러가는지 ( 기본적으로 1초가 1분 )
 
-    [Header("Ȱ��")]
+    [Header("활동")]
     public ActivityType currentActivityType;
     public GameObject panelActivity;
 
-    [Header("���")]
+    [Header("기록")]
     public float totalHappy;
     public float totalMuscle;
     public float totalFat;
@@ -88,6 +92,7 @@ public class GameData : MonoBehaviour
         if (pause)
             return;
 
+        ChangeStats();
         ChangeTime();
         ChangeFatigue();
     }
@@ -95,7 +100,12 @@ public class GameData : MonoBehaviour
     {
         speedText.text = "x" + speedLevel;
     }
-
+    private void ChangeStats()
+    {
+        currentMuscleMassText.text = currentMuscleMass + "kg";
+        currentFatMassText.text = currentFatMass + "kg";
+        //happinessText.text = happiness + "%";
+    }
     private void ChangeTime()
     {
         if(currentActivityType == ActivityType.Sleep)
@@ -118,7 +128,7 @@ public class GameData : MonoBehaviour
         {
             fatigue += Time.deltaTime * 2.3f * speedLevel;
         }
-        else if (currentActivityType == ActivityType.Rest)
+        else if (currentActivityType == ActivityType.Rest || currentActivityType == ActivityType.Sleep)
         {
             fatigue += Time.deltaTime * 2.3f * speedLevel * -1;
         }
@@ -128,7 +138,7 @@ public class GameData : MonoBehaviour
         fatigueText.text = Mathf.FloorToInt(fatigue) + "/100";
         sliderFatigue.value = fatigue / 100;
 
-        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // �Ƿε��� 80 ������ ������ �ƴϸ� �����
+        fillImageFatigue.color = fatigue >= 80 ? dagerFatigueColor : safeFatigueColor; // 피로도가 80 넘으면 빨간색 아니면 노란색
     }
     private void ChangeMoney()
     {
@@ -137,12 +147,15 @@ public class GameData : MonoBehaviour
 
     private void SetDate()
     {
-        string curDateText = currentDate.Year + "��" +
-                             currentDate.Month + "��" + currentDate.Day + "��";
+        string curDateText = currentDate.Month + "월" + currentDate.Day + "일";
         dateText.text = curDateText;
 
         string curTimeText = currentDate.Hour + " : " + currentDate.Minute;
         timeText.text = curTimeText;
+
+        DateTime specificDate = new DateTime(2023, 1, 1, 12, 0, 0);
+        TimeSpan diff = currentDate - specificDate;
+        dday_text.text = "D - " + (diff.Days +1);
     }
 
     public void LoadData()
@@ -157,6 +170,7 @@ public class GameData : MonoBehaviour
         sendData.currentFatMass = currentFatMass;
         sendData.happiness = happiness;
         sendData.money = money;
+        sendData.fatigue = fatigue;
         sendData.currentDate = currentDate;
         sendData.itemList = foodStorage.GetInventoryItemState();
 
@@ -194,14 +208,15 @@ public class SendData
 {
     public Character character;
 
-    public float currentMuscleMass; // ���� ��ݱٷ�
-    public float currentFatMass; // ���� ü���淮
-    public float happiness; // ���� �ູ��
+    public float currentMuscleMass; // 현재 골격근량
+    public float currentFatMass; // 현재 체지방량
+    public float happiness; // 현재 행복도
 
-    public int money; // ��
+    public int money; // 돈
 
+    public float fatigue; // 피로도
 
-    public DateTime currentDate; // ��¥
+    public DateTime currentDate; // 날짜
 
     public List<InventoryItem> itemList;
 }

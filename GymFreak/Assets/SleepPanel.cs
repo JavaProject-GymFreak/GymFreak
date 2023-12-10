@@ -83,7 +83,7 @@ public class SleepPanel : MonoBehaviour
         }
         M.color = gameData.currentMuscleMass < (gameData.currentMuscleMass + muscleInc) ? Color.green : Color.red;
 
-        M.text = gameData.currentMuscleMass + " -> " + (gameData.currentMuscleMass + muscleInc);
+        M.text = gameData.currentMuscleMass + "kg -> " + (gameData.currentMuscleMass + muscleInc)+"kg";
         gameData.totalMuscle = 0;
         gameData.currentMuscleMass += muscleInc;
 
@@ -110,7 +110,7 @@ public class SleepPanel : MonoBehaviour
         }
 
         F.color = gameData.currentFatMass < (gameData.currentFatMass + fatInc) ? Color.red : Color.green;
-        F.text = gameData.currentFatMass + " -> " + (gameData.currentFatMass + fatInc);
+        F.text = gameData.currentFatMass + "kg -> " + (gameData.currentFatMass + fatInc) + "kg";
         gameData.totalFat = 0;
         gameData.currentFatMass += fatInc;
     }
